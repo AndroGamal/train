@@ -7,12 +7,15 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,15 +24,18 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ListView listView;
-    Button select, sign_in;
-   static boolean color = true;
+    Button sign_in;
     EditText name, pass;
-    TextView textemail;
+    static TextView textemail,num;
     SharedPreferences.Editor email;
     SharedPreferences read;
     String em;
     NavigationView navigationView;
-  static View[] ArrayView ;
+    static View[] ArrayView;
+    RecyclerView recycler;
+    MyAdapter_Recycler mAdapter;
+    static int i=0;
+    ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -43,31 +49,23 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        imageView=findViewById(R.id.imageView3);
+        recycler = findViewById(R.id.r);
         name = findViewById(R.id.name);
         pass = findViewById(R.id.pass);
         listView = findViewById(R.id.list_view);
         sign_in = findViewById(R.id.sign_in_bot);
-        select = findViewById(R.id.select);
-        ArrayView=new View[4];
-        ArrayView[0]= findViewById(R.id.tic);
-        ArrayView[1]= findViewById(R.id.paypal);
-        ArrayView[2]=findViewById(R.id.t);
-        ArrayView[3]=findViewById(R.id.sign_in);
-         select.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (color) {
-                    select.setBackgroundResource(R.color.colorPrimaryDark);
-                    color = false;
-                    Start.list.get(myadapter.s).setSelect(true);
-                } else {
-                    select.setBackgroundResource(android.R.color.darker_gray);
-                    color = true;
-                    Start.list.get(myadapter.s).setSelect(false);
-                }
-            }
-        });
+        num=findViewById(R.id.num);
+        ArrayView = new View[5];
+        ArrayView[0] = findViewById(R.id.tic);
+        ArrayView[1] = findViewById(R.id.paypal);
+        ArrayView[2] = findViewById(R.id.t);
+        ArrayView[3] = findViewById(R.id.sign_in);
+        ArrayView[4] = findViewById(R.id.recs);
         listView.setAdapter(new myadapter(this, R.layout.one_train_journey, Start.list));
+        mAdapter = new MyAdapter_Recycler(this, R.layout.object_tecket, Start.list);
+        recycler.setLayoutManager(new LinearLayoutManager(this) );
+        recycler.setAdapter(mAdapter);
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         textemail = navigationView.getHeaderView(0).findViewById(R.id.emailt);
@@ -75,22 +73,34 @@ public class MainActivity extends AppCompatActivity
         read = getSharedPreferences("Email", MODE_MULTI_PROCESS);
         em = read.getString("email", "Null");
         textemail.setText(em);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show_one_layout(ArrayView[1], ArrayView);
+            }
+        });
         if (em == "Null") {
             navigationView.setCheckedItem(R.id.log_in);
             set_Enable_Menu(false);
         }
+        else {navigationView.setCheckedItem(R.id.ticket);
+        show_one_layout(ArrayView[0],ArrayView);
+        }
         sign_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                email.putString("email", name.getText().toString());
-                email.commit();
-                textemail.setText(read.getString("email", "Null"));
-                set_Enable_Menu(true);
-                navigationView.setCheckedItem(R.id.ticket);
-                show_one_layout(ArrayView[0], ArrayView);
+                if (!sign_in.getText().toString().isEmpty() && !pass.getText().toString().isEmpty()) {
+                    email.putString("email", name.getText().toString());
+                    email.commit();
+                    textemail.setText(read.getString("email", "Null"));
+                    set_Enable_Menu(true);
+                    navigationView.setCheckedItem(R.id.ticket);
+                    show_one_layout(ArrayView[0], ArrayView);
+                } else {
+                    Toast.makeText(MainActivity.this, "you must write email and password", Toast.LENGTH_LONG).show();
+                }
             }
         });
-
     }
 
     @Override
@@ -98,8 +108,8 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (findViewById(R.id.t).getVisibility() == View.VISIBLE) {
-          show_one_layout(ArrayView[0], ArrayView);
+        } else if (findViewById(R.id.recs).getVisibility() == View.VISIBLE) {
+            show_one_layout(ArrayView[0], ArrayView);
         } else {
             super.onBackPressed();
         }
@@ -123,6 +133,8 @@ public class MainActivity extends AppCompatActivity
             email.clear();
             email.commit();
             set_Enable_Menu(false);
+            show_one_layout(ArrayView[3], ArrayView);
+            navigationView.setCheckedItem(R.id.log_in);
 
         } else {
             Toast.makeText(this, "please sign in", Toast.LENGTH_SHORT).show();
@@ -143,10 +155,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     static void show_one_layout(View id, View[] ID_list) {
-            for (View v : ID_list) {
-                v.setVisibility(View.GONE);
-            }
-            id.setVisibility(View.VISIBLE);
+        for (View v : ID_list) {
+            v.setVisibility(View.GONE);
+        }
+        id.setVisibility(View.VISIBLE);
 
 
     }

@@ -25,7 +25,7 @@ public class Start extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        progressBar = findViewById(R.id.progressBar);
+        //  progressBar = findViewById(R.id.progressBar);
         i = 0;
         timer.schedule(new TimerTask() {
             @Override
@@ -34,8 +34,10 @@ public class Start extends AppCompatActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        progressBar.setProgress(i);
-                        if (i >= progressBar.getMax()) {
+                 //       progressBar.setProgress(i);
+                        i++;
+                      //  if (i >= progressBar.getMax()) {
+                        if(i>100){
                             startActivity(new Intent(Start.this, MainActivity.class));
                             timer.cancel();}
                         }
