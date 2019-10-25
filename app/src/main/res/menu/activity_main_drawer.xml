@@ -27,28 +27,11 @@
              android:icon="@drawable/pay"
              android:title="Pay" />
          <item
-             android:id="@+id/nav_slideshow"
+             android:id="@+id/my_ticket"
              android:icon="@drawable/train"
-             android:title="Your Train" />
-         <item
-             android:id="@+id/nav_manage"
-             android:icon="@drawable/ic_menu_manage"
-             android:title="Setting" />
-        </group></menu></item>
+             android:title="My Ticket" />
+         </group></menu></item>
 
-     <item android:title="Cancel or Send Order">
-         <menu>
-             <group android:checkableBehavior="single">
-             <item
-                 android:id="@+id/cansel"
-                 android:icon="@drawable/ticket"
-                 android:title="Cancel Ticket" />
-             <item
-                 android:id="@+id/nav_send"
-                 android:icon="@drawable/ic_menu_send"
-                 android:title="Send" /></group>
-         </menu>
-     </item>
 
     <item android:title="Log Out">
         <menu>

@@ -14,14 +14,14 @@ import java.util.List;
  * Created by Andro on 10/24/2019.
  */
 
-public class MyAdapter_Recycler extends RecyclerView.Adapter<MyAdapter_Recycler.MyViewHolder> {
+public class MyAdapter_myticket_Recycler extends RecyclerView.Adapter<MyAdapter_myticket_Recycler.MyViewHolder> {
     int Resource;
     Context Con;
     List<java_train_journey> list;
     View view;
     Button select;
 
-    MyAdapter_Recycler(Context context, int resource, List objects) {
+    MyAdapter_myticket_Recycler(Context context, int resource, List objects) {
         Resource = resource;
         Con = context;
         list = objects;
@@ -37,7 +37,7 @@ public class MyAdapter_Recycler extends RecyclerView.Adapter<MyAdapter_Recycler.
     public MyViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(Con);
         view = layoutInflater.inflate(Resource, parent, false);
-        select = view.findViewById(R.id.select);
+        select=view.findViewById(R.id.cancel_ticket);
         return new MyViewHolder(view);
     }
 
@@ -46,16 +46,17 @@ public class MyAdapter_Recycler extends RecyclerView.Adapter<MyAdapter_Recycler.
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.num.setText(++MainActivity.i + "");
-                MainActivity.my_ticket.add(list.get(position));
+                MainActivity.num.setText(--MainActivity.i+"");
+                Start.list.add(list.get(position));
                 list.remove(position);
-                MainActivity.mAdapter = new MyAdapter_Recycler(Con, R.layout.object_tecket, Start.list);
-                MainActivity.recycler.setLayoutManager(new LinearLayoutManager(Con));
-                MainActivity.recycler.setAdapter(MainActivity.mAdapter);
+                MainActivity.mAdapter_my = new MyAdapter_myticket_Recycler(Con, R.layout.object_my_ticket, MainActivity.my_ticket);
+                MainActivity.recycler_my.setLayoutManager(new LinearLayoutManager(Con));
+                MainActivity.recycler_my.setAdapter(MainActivity.mAdapter_my);
 
-            }
+                    }
         });
     }
+
 
     @Override
     public int getItemCount() {

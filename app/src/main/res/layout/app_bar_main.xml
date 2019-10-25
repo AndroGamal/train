@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.andro.train.MainActivity">
-
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,22 +57,20 @@
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
-
     <include layout="@layout/content_main" />
-
     <include
         layout="@layout/ticket"
         android:visibility="gone" />
-
     <include
         layout="@layout/travel_train"
         android:visibility="gone" />
-
     <include
         layout="@layout/pay"
         android:visibility="gone" />
     <include
         layout="@layout/opj_ticket"
         android:visibility="gone" />
-
+    <include
+        layout="@layout/opj_my_ticket"
+        android:visibility="gone" />
 </android.support.design.widget.CoordinatorLayout>

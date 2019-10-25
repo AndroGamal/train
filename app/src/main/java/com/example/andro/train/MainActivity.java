@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,22 +22,28 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ListView listView;
     Button sign_in;
     EditText name, pass;
-    static TextView textemail,num;
+    static TextView textemail, num;
     SharedPreferences.Editor email;
     SharedPreferences read;
     String em;
     NavigationView navigationView;
     static View[] ArrayView;
-    RecyclerView recycler;
-    MyAdapter_Recycler mAdapter;
-    static int i=0;
+    static RecyclerView recycler, recycler_my;
+    static MyAdapter_Recycler mAdapter;
+    static MyAdapter_myticket_Recycler mAdapter_my;
+    static int i = 0;
+    Animation animation;
     ImageView imageView;
+    static ArrayList<java_train_journey> my_ticket;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -49,23 +57,33 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        imageView=findViewById(R.id.imageView3);
+        animation = AnimationUtils.loadAnimation(this, R.anim.button);
+        my_ticket = new ArrayList<>();
+        imageView = findViewById(R.id.imageView3);
+        imageView.setEnabled(false);
+        //imageView.setAnimation(animation);
         recycler = findViewById(R.id.r);
+        recycler_my = findViewById(R.id.r_my);
         name = findViewById(R.id.name);
         pass = findViewById(R.id.pass);
         listView = findViewById(R.id.list_view);
         sign_in = findViewById(R.id.sign_in_bot);
-        num=findViewById(R.id.num);
-        ArrayView = new View[5];
+        num = findViewById(R.id.num);
+        //num.setAnimation(animation);
+        ArrayView = new View[6];
         ArrayView[0] = findViewById(R.id.tic);
         ArrayView[1] = findViewById(R.id.paypal);
         ArrayView[2] = findViewById(R.id.t);
         ArrayView[3] = findViewById(R.id.sign_in);
         ArrayView[4] = findViewById(R.id.recs);
+        ArrayView[5] = findViewById(R.id.recs_my);
         listView.setAdapter(new myadapter(this, R.layout.one_train_journey, Start.list));
         mAdapter = new MyAdapter_Recycler(this, R.layout.object_tecket, Start.list);
-        recycler.setLayoutManager(new LinearLayoutManager(this) );
+        recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(mAdapter);
+        mAdapter_my = new MyAdapter_myticket_Recycler(this, R.layout.object_my_ticket, my_ticket);
+        recycler_my.setLayoutManager(new LinearLayoutManager(this));
+        recycler_my.setAdapter(mAdapter_my);
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         textemail = navigationView.getHeaderView(0).findViewById(R.id.emailt);
@@ -76,15 +94,18 @@ public class MainActivity extends AppCompatActivity
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                imageView.startAnimation(animation);
+                num.startAnimation(animation);
                 show_one_layout(ArrayView[1], ArrayView);
             }
         });
         if (em == "Null") {
             navigationView.setCheckedItem(R.id.log_in);
             set_Enable_Menu(false);
-        }
-        else {navigationView.setCheckedItem(R.id.ticket);
-        show_one_layout(ArrayView[0],ArrayView);
+        } else {
+            navigationView.setCheckedItem(R.id.ticket);
+            show_one_layout(ArrayView[0], ArrayView);
+            imageView.setEnabled(true);
         }
         sign_in.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +117,7 @@ public class MainActivity extends AppCompatActivity
                     set_Enable_Menu(true);
                     navigationView.setCheckedItem(R.id.ticket);
                     show_one_layout(ArrayView[0], ArrayView);
+                    imageView.setEnabled(true);
                 } else {
                     Toast.makeText(MainActivity.this, "you must write email and password", Toast.LENGTH_LONG).show();
                 }
@@ -127,8 +149,8 @@ public class MainActivity extends AppCompatActivity
             show_one_layout(ArrayView[1], ArrayView);
         } else if (id == R.id.log_in) {
             show_one_layout(ArrayView[3], ArrayView);
-        } else if (id == R.id.cansel) {
-
+        } else if (id == R.id.my_ticket) {
+            show_one_layout(ArrayView[5], ArrayView);
         } else if (id == R.id.log_out) {
             email.clear();
             email.commit();
@@ -146,11 +168,8 @@ public class MainActivity extends AppCompatActivity
 
     void set_Enable_Menu(boolean enable_menu) {
         navigationView.getMenu().findItem(R.id.ticket).setEnabled(enable_menu);
-        navigationView.getMenu().findItem(R.id.nav_send).setEnabled(enable_menu);
         navigationView.getMenu().findItem(R.id.paybal).setEnabled(enable_menu);
-        navigationView.getMenu().findItem(R.id.nav_manage).setEnabled(enable_menu);
-        navigationView.getMenu().findItem(R.id.nav_slideshow).setEnabled(enable_menu);
-        navigationView.getMenu().findItem(R.id.cansel).setEnabled(enable_menu);
+        navigationView.getMenu().findItem(R.id.my_ticket).setEnabled(enable_menu);
 
     }
 
