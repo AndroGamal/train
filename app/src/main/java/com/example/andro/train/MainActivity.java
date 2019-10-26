@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 imageView.startAnimation(animation);
-                num.startAnimation(animation);
                 show_one_layout(ArrayView[1], ArrayView);
             }
         });

@@ -1,11 +1,14 @@
 package com.example.andro.train;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
 import java.util.List;
@@ -20,11 +23,14 @@ public class MyAdapter_Recycler extends RecyclerView.Adapter<MyAdapter_Recycler.
     List<java_train_journey> list;
     View view;
     Button select;
-
+    Handler h = new Handler();
+Animation animation;
     MyAdapter_Recycler(Context context, int resource, List objects) {
         Resource = resource;
         Con = context;
         list = objects;
+        animation = AnimationUtils.loadAnimation(Con, R.anim.transport);
+
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -42,16 +48,39 @@ public class MyAdapter_Recycler extends RecyclerView.Adapter<MyAdapter_Recycler.
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity.num.setText(++MainActivity.i + "");
                 MainActivity.my_ticket.add(list.get(position));
                 list.remove(position);
-                MainActivity.mAdapter = new MyAdapter_Recycler(Con, R.layout.object_tecket, Start.list);
-                MainActivity.recycler.setLayoutManager(new LinearLayoutManager(Con));
-                MainActivity.recycler.setAdapter(MainActivity.mAdapter);
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        h.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                MainActivity.mAdapter = new MyAdapter_Recycler(Con, R.layout.object_tecket, list);
+                                MainActivity.recycler.setLayoutManager(new LinearLayoutManager(Con));
+                                MainActivity.recycler.setAdapter(MainActivity.mAdapter);
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                holder.itemView.startAnimation(animation);
+
 
             }
         });

@@ -1,14 +1,17 @@
 package com.example.andro.train;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class Start extends AppCompatActivity {
@@ -25,7 +28,7 @@ public class Start extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-     /*  imageView=findViewById(R.id.imageView2);
+       imageView=findViewById(R.id.imageView2);
         i = 0;
         animation= AnimationUtils.loadAnimation(this,R.anim.rotate);
         imageView.startAnimation(animation);
@@ -37,6 +40,7 @@ public class Start extends AppCompatActivity {
                     public void run() {
                         i++;
                         if(i>100){
+                            imageView.clearAnimation();
                             startActivity(new Intent(Start.this, MainActivity.class));
                             timer.cancel();}
                         }
@@ -89,5 +93,5 @@ public class Start extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         n = true;
-    */}
+    }
 }
